@@ -12,7 +12,16 @@ class HashIdentifier(object):
         self.hashc = hashc
 
 
-    def decrypter(self):
+    def avaliate(self):
+        if len(self.hashc) == 32:
+            print("[*] Hash MD5 Identified!")
+
+        else:
+            print("[!] Invalid Hash MD5")
+            sys.exit()
+
+
+    def decrypt(self):
 
         # Using Gromweb
         self.content = requests.get(
@@ -22,15 +31,17 @@ class HashIdentifier(object):
 
         self.hashresult = self.soup.find('em', attrs={'class': 'long-content string'})
 
-        if self.hashresult is not None:
+        if self.hashresult:
             return self.hashresult.text
 
 
 if __name__ == '__main__':
     hash1 = HashIdentifier(sys.argv[1])
-    
-    if hash1 is not True:
-        print("[*] Gromweb\t\t[-] Not Found")
+
+    hash1.avaliate()
+
+    if hash1.decrypt():
+        print("[*] Gromweb\t\t[+] Found: {}" .format(hash1.decrypt()))
 
     else:
-        print("[*] Gromweb\t\t[+] Found: {}" .format(hash1.decrypter()))
+        print("[*] Gromweb\t\t[-] Not Found")
